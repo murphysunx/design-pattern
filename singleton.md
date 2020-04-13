@@ -185,3 +185,64 @@ class Singleton {
 2. 避免反复进行方法同步
 3. 线程安全；延迟加载；效率较高
 4. 在实际开发中，推荐使用这种单例模式设计
+
+### 静态内部类
+
+```java
+class Singleton {
+    private Singleton() {}
+
+    // 写一个静态内部类，该类有一个静态属性Singleton
+    // jvm在类装载时是线程安全的
+    private static class SingletonInstance {
+        private static final Singleton INSTANCE = new Singleton;
+    }
+
+    // 童工一个静态的共有方法，直接返回SingletonInstance.INSTANCE
+	public static Singleton getInstance() {
+        return SingletonInstance.INSTANCE;
+    }
+}
+```
+
+#### 分析
+
+1. 采用了类装载机制来保证初始化实例时只有一个线程
+2. 静态内部类方式在Singleton类被装载时并不会立即实例化，而是在需要实例化时，调用getInstance方法，才会装载SingletonInstance类，从而完成Singleton的实例化。
+3. 类的静态属性只会第一次加载类的时候初始化，JVM帮助我们保证了线程的安全性，在类进行初始化时，别的线程是无法进入的
+4. 优点：避免了**线程不安全**， 利用静态内部类特点实现延加载，效率高
+5. 推荐使用
+
+
+
+### 枚举
+
+```java
+enum Singleton {
+    INSTANCE;
+    public void sayOK() {
+        System.out.println("ok");
+    }
+}
+```
+
+#### 分析
+
+1. 借助枚举来实现单例模式。不仅能避免多线程同步问题，而且还能防止反序列化重新创建新的对象。
+2. 这种方式是Effective Java作者Josh Bloch提倡的方式
+3. 推荐使用
+
+
+
+##  JDK源码分析
+
+**java.lang.Runtime**
+
+
+
+### 注意事项
+
+1. 单利模式保证了系统内存中该类只存在一个对象，节省了系统资源，对于一些需要频繁创建销毁的对象，使用单例模式可以提高系统性能。
+2. 当想实例化一个单例类的时候，必须要记住使用相应的获取对象的方法，而不是使用new
+3. 单例模式使用场景：
+   1. 需要频繁的进行创建和销毁的对象，创建对象时耗时过多或耗费资源过多（即：重量级对象），但又经常用到的对象，工具类对象、频繁访问数据库或文件的对象（比如数据源。session工厂等）
