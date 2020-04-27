@@ -1,4 +1,4 @@
-package factory.factorymethod.pizza;
+package factory.absfactory.pizza;
 
 public class LDCheesePizza extends Pizza {
 

@@ -1,8 +1,6 @@
-package factory.simplefactory.order;
+package factory.absfactory.order;
 
-import factory.simplefactory.pizza.CheesePizza;
-import factory.simplefactory.pizza.GreekPizza;
-import factory.simplefactory.pizza.Pizza;
+import factory.absfactory.pizza.Pizza;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -10,30 +8,30 @@ import java.io.InputStreamReader;
 
 public class OrderPizza {
 
-    SimpleFactory simpleFactory;
-    Pizza pizza = null;
+    AbsFactory absFactory;
 
-    public OrderPizza(SimpleFactory simpleFactory) {
-        setSimpleFactory(simpleFactory);
+    public OrderPizza(AbsFactory factory) {
+        setAbsFactory(factory);
     }
 
-    public void setSimpleFactory(SimpleFactory simpleFactory) {
+    private void setAbsFactory(AbsFactory factory) {
+        Pizza pizza = null;
         String orderType = "";
-        this.simpleFactory = simpleFactory;
+        this.absFactory = factory;
+
         do {
             orderType = getType();
-            pizza = this.simpleFactory.createPizza(orderType);
-
+            pizza = factory.createPizza(orderType);
             if (pizza != null) {
                 pizza.prepare();
                 pizza.bake();
                 pizza.cut();
                 pizza.box();
             } else {
-                System.out.println(" 订购披萨失败 ");
+                System.out.println("订购失败");
                 break;
             }
-        } while(true);
+        } while (true);
     }
 
     private String getType() {

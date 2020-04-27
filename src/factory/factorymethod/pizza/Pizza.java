@@ -1,4 +1,4 @@
-package factory.simplefactory.pizza;
+package factory.factorymethod.pizza;
 
 public abstract class Pizza {
     protected String name;
